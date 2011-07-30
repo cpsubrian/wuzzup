@@ -6,7 +6,6 @@
 var express = require('express');
 var app = module.exports = express.createServer();
 var settings = require('./settings.js');
-var helpers = require('./helpers.js')(app, settings);
 
 // Configuration
 app.configure(function(){
@@ -18,8 +17,8 @@ app.configure(function(){
   app.use(express.cookieParser());
   app.use(express.session({ secret:  settings.session.secret}));
   app.use(express.compiler({ src: __dirname + '/public', enable: ['less'] }));
-  app.use(app.router);
   app.use(express.static(__dirname + '/public'));
+  app.use(app.router);
 });
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
@@ -32,12 +31,19 @@ app.configure('production', function(){
 });
 
 // Helpers
-app.helpers(helpers);
+app.helpers(require('./helpers.js')(app, settings));
 
-// Routes
-app.get('/', function(req, res){
-  res.render('index');
+// Load Controllers.
+require('./controllers/ErrorController.js')(app, settings);
+require('./controllers/AppController.js')(app, settings);
+
+// Catch-all 404 handler (Do not add any routes below this).
+app.get('/*', function(req, res, next) {
+  next(new NotFound('Page not found.'));
 });
 
-app.listen(settings.port);
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+//Only listen on $ node app.js
+if (!module.parent) {
+  app.listen(settings.port);
+  console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+}

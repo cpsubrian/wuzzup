@@ -1,5 +1,5 @@
 /**
- * Application helpers.
+ * Application helpers.  These are available in all rendered template.
  */
 module.exports = function(app, settings) {
   return {
