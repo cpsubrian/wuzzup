@@ -18,9 +18,9 @@ sys.inherits(NotFound, Error);
 /**
  * Error Controller.
  */
-var ErrorController = function(app, settings) {
+var ErrorController = function(app, conf) {
   this.app = app;
-  this.settings = settings;
+  this.conf = conf;
   
   // Errors will fall through these handlers via next().
   app.error(this.notFound404);
@@ -51,6 +51,6 @@ ErrorController.prototype.serverError505 = function(err, req, res) {
 }
 
 //Export the ErrorController.
-module.exports = function(app, settings) {
-  return new ErrorController(app, settings);
+module.exports = function(app, conf) {
+  return new ErrorController(app, conf);
 };

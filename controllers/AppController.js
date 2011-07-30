@@ -1,9 +1,9 @@
 /**
  * Basic Application Controller.
  */
-var AppController = function(app, settings) {
+var AppController = function(app, conf) {
   this.app = app;
-  this.settings = settings;
+  this.conf = conf;
   
   // GET Routes.
   app.get('/', this.index);
@@ -23,6 +23,6 @@ AppController.prototype.index = function(req, res) {
 }
 
 // Export the AppController.
-module.exports = function(app, settings) {
-  return new AppController(app, settings);
+module.exports = function(app, conf) {
+  return new AppController(app, conf);
 };

@@ -3,9 +3,17 @@
  */
 module.exports = {
   port: 3001,
+  hostname: 'wuzzup.brianthomaslink.com',
   title: 'Wuzzup',
   session: {
     secret: 'your secret here'
+  },
+  mongodb: {
+    uri: {
+      development: 'mongodb://localhost/wuzzup_dev',
+      test: 'mongodb://localhost/wuzzup_test',
+      production: 'mongodb://localhost/wuzzup',
+    }
   },
   scripts: {
     'head': [
