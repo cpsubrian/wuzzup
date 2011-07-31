@@ -6,7 +6,32 @@
     {{html headScripts}}
   </html>
   <body>
-    {{html body}}
+    <!-- Header -->
+    <header>
+      <section class="title">
+        <h1>${title}</h1>
+      </section>
+      <section class="auth">
+        {{if everyauth.loggedIn}}
+          {{if everyauth.twitter}}
+            <img src="${everyauth.twitter.user.profile_image_url}" />
+            ${everyauth.twitter.user.name}
+          {{/if}}
+        {{else}}
+          <div id="twitter-login" class="fb-button">
+            <a href="/auth/twitter">
+              <img src="http://connect.freedomworks.org/sites/default/themes/freedomworks_gac/images/login-button-twitter.png" />
+            </a>
+          </div>
+        {{/if}}
+      </section>
+    </header>
+    
+    <!-- Body -->
+    <section class="body">
+      {{html body}}
+    </section>
+        
     {{html footerScripts}}
   </body>
 <html>
