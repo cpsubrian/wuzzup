@@ -1,0 +1,13 @@
+{{if loggedIn}}
+  {{if twitter}}
+    <img src="${twitter.user.profile_image_url}" />
+    ${twitter.user.name}
+  {{/if}}
+  <a href="/logout">Logout</a>
+{{else}}
+  <div id="twitter-login">
+    <a href="/auth/twitter">
+      <img src="http://connect.freedomworks.org/sites/default/themes/freedomworks_gac/images/login-button-twitter.png" />
+    </a>
+  </div>
+{{/if}}
