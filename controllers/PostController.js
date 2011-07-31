@@ -68,7 +68,7 @@ PostController.prototype.createPost = function(req, res) {
     // TODO implement error handling.
   }
   else {
-    var post = new Post({body: req.body['body'], user: req.user._id);
+    var post = new Post({body: req.body['body'], user: req.user._id});
     post.save(function() {
       switch (req.params.format) {
         case 'json':
