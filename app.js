@@ -17,6 +17,7 @@ app.modules = modules;
 app.db = mongoose;
 app.models = {};
 app.models.User = require('./models/User.js')(app, conf);
+app.models.Post = require('./models/Post.js')(app, conf);
 
 // Configuration
 app.configure(function(){
@@ -52,6 +53,7 @@ mongooseAuth.helpExpress(app);
 //Load Controllers.
 require('./controllers/ErrorController.js')(app, conf);
 require('./controllers/AppController.js')(app, conf);
+require('./controllers/PostController.js')(app, conf);
 
 // Catch-all 404 handler (Do not add any routes below this).
 app.get('/*', function(req, res, next) {

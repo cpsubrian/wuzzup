@@ -50,7 +50,7 @@ ErrorController.prototype.serverError505 = function(err, req, res) {
   });
 }
 
-//Export the ErrorController.
+// Export a new instance of a ErrorController.
 module.exports = function(app, conf) {
   return new ErrorController(app, conf);
 };

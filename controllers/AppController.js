@@ -31,7 +31,7 @@ AppController.prototype.logout =  function (req, res) {
   res.redirect('/');
 };
 
-// Export the AppController.
+// Export a new instance of an AppController.
 module.exports = function(app, conf) {
   return new AppController(app, conf);
 };
