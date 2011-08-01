@@ -10,5 +10,11 @@
     , "everyauth": ">=0.2.11"
     , "mongoose-auth": ">= 0.0.1"
     , "mongoose-types": ">= 1.0.0"
+    , "vows": ">= 0.0.1"
+    , "should": ">= 0.0.1"
+    , "tobi": ">= 0.0.1"
+  }
+  , "scripts": {
+      "test": "vows --spec"
   }
 }

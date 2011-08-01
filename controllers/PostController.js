@@ -37,7 +37,7 @@ PostController.prototype.listPosts = function(req, res) {
       case 'json':
         res.send(posts.map(function(post) {
           return post.toJSON();
-        }));
+        }), {'Content-Type' : 'application/json'});
         break;
 
       default:
@@ -52,7 +52,7 @@ PostController.prototype.listPosts = function(req, res) {
 PostController.prototype.readPost = function(req, res) {
   switch (req.params.format) {
     case 'json':
-      res.send(req.loaded.doc.toJSON());
+      res.send(req.loaded.doc.toJSON(), {'Content-Type' : 'application/json'});
       break;
   
     default:
@@ -66,13 +66,14 @@ PostController.prototype.readPost = function(req, res) {
 PostController.prototype.createPost = function(req, res) {
   if (!req.user) {
     // TODO implement error handling.
+    res.send('Error', 500);
   }
   else {
     var post = new Post({body: req.body['body'], user: req.user._id});
     post.save(function() {
       switch (req.params.format) {
         case 'json':
-          res.send(post.toJSON());
+          res.send(post.toJSON(), {'Content-Type' : 'application/json'});
           break;
   
         default:
@@ -91,7 +92,7 @@ PostController.prototype.updatePost = function(req, res) {
   post.save(function() {
     switch (req.params.format) {
       case 'json':
-        res.send(post.toJSON());
+        res.send(post.toJSON(), {'Content-Type' : 'application/json'});
        break;
 
        default:
@@ -107,7 +108,7 @@ PostController.prototype.deletePost = function(req, res) {
   req.loaded.post.remove(function() {
     switch (req.params.format) {
       case 'json':
-        res.send('true');
+        res.send('true', {'Content-Type' : 'application/json'});
        break;
 
        default:
