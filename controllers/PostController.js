@@ -66,7 +66,7 @@ PostController.prototype.readPost = function(req, res) {
 PostController.prototype.createPost = function(req, res) {
   if (!req.user) {
     // TODO implement error handling.
-    res.send('Error', 500);
+    res.send('Error', 403);
   }
   else {
     var post = new Post({body: req.body['body'], user: req.user._id});
