@@ -18,7 +18,7 @@ module.exports =  function(app, conf) {
         }
       }
     },
-    twitter:{
+    twitter: {
       everyauth: {
         consumerKey: conf.auth.twitter.consumerKey,
         consumerSecret: conf.auth.twitter.consumerSecret,

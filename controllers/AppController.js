@@ -5,6 +5,8 @@ var AppController = function(app, conf) {
   this.app = app;
   this.conf = conf;
   
+  var UserController = app.controllers.user;
+  
   // GET Routes.
   app.get('/', this.index);
   app.get('/logout', this.logout);

@@ -14,18 +14,20 @@ var PostController = function(app, conf) {
   Post = app.models.Post;
   User = app.models.User;
   
+  UserController = app.controllers.user;
+  
   // GET Routes.
   app.get('/posts.:format?', this.listPosts);
   app.get('/posts/:postId.:format?', this.readPost);
   
   // POST Routes.
-  app.post('/posts.:format?', this.createPost);
+  app.post('/posts.:format?', UserController.requireUser, this.createPost);
   
   // PUT Routes.
-  app.put('/posts/:postId.:format?', this.updatePost);
+  app.put('/posts/:postId.:format?', UserController.requireUser, this.updatePost);
   
   // DELETE Routes.
-  app.del('/posts/:postId.:format?', this.deletePost);
+  app.del('/posts/:postId.:format?', UserController.requireUser, this.deletePost);
 }
 
 /**
@@ -64,23 +66,17 @@ PostController.prototype.readPost = function(req, res) {
  * Create a Post.
  */
 PostController.prototype.createPost = function(req, res) {
-  if (!req.user) {
-    // TODO implement error handling.
-    res.send('Error', 403);
-  }
-  else {
-    var post = new Post({body: req.body['body'], user: req.user._id});
-    post.save(function() {
-      switch (req.params.format) {
-        case 'json':
-          res.send(post.toJSON(), {'Content-Type' : 'application/json'});
-          break;
-  
-        default:
-          // TODO implement html version.
-      }
-    });
-  }
+  var post = new Post({body: req.body['body'], user: req.user._id});
+  post.save(function() {
+    switch (req.params.format) {
+      case 'json':
+        res.send(post.toJSON(), {'Content-Type' : 'application/json'});
+        break;
+
+      default:
+        // TODO implement html version.
+    }
+  });
 }
 
 /**

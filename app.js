@@ -51,9 +51,11 @@ app.helpers(require('./helpers.js')(app, conf));
 mongooseAuth.helpExpress(app);
 
 //Load Controllers.
-require('./controllers/ErrorController.js')(app, conf);
-require('./controllers/AppController.js')(app, conf);
-require('./controllers/PostController.js')(app, conf);
+app.controllers = {};
+app.controllers.error = require('./controllers/ErrorController.js')(app, conf);
+app.controllers.user = require('./controllers/UserController.js')(app, conf);
+app.controllers.app = require('./controllers/AppController.js')(app, conf);
+app.controllers.post = require('./controllers/PostController.js')(app, conf);
 
 // Catch-all 404 handler (Do not add any routes below this).
 app.get('/*', function(req, res, next) {

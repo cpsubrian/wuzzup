@@ -26,7 +26,7 @@ vows
   .addBatch({
     'An unauthenticated user': {
       'attempting to create a new post': {
-        topic: postUrl('/posts.json', {body: 'This is my test post'}),
+        topic: macros.postUrl('/posts.json', {body: 'This is my test post'}),
         'should receive a status of 403': function(_, res, $){
           res.should.have.status(403);
         },
