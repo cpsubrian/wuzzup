@@ -1,3 +1,11 @@
-<p>
-   Welcome to ${title}
-</p>
+{{if user}}
+<form id="post" method="post" action="/posts">
+  <h2>New Post</h2>
+  <input type="text" name="body" placeholder="Type your message here" size="64" /><br />
+</form>
+{{/if}}
+
+<div id="posts">
+  <h2>Posts</h2>
+  <ul></ul>
+</div>

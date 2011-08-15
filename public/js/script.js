@@ -1,6 +1,116 @@
-(function($) {
+// Compatibility for '$' variable.
+(function($) { 
 
-
-
+  /**
+   * Post Model
+   */
+  var Post = Backbone.Model.extend({
+    
+    // Default attributes.
+    defaults: {
+      body: 'Empty post...'
+    },
+    
+    // Ensure that each post has content.
+    initialize: function() {
+      if (!this.has('body')) {
+        this.set({'body': this.defaults.content}); 
+      }
+    }
+    
+  });
+  
+  /**
+   * Post Collection
+   */
+  var PostCollection = Backbone.Collection.extend({
+    model: Post,
+    url: '/posts'
+  });
+  
+  /**
+   * Post View
+   */
+  var PostView = Backbone.View.extend({
+    tagName: 'li',
+    className: 'post',
+    
+    events: {
+      'click .remove': 'removePost'
+    },
+    
+    initialize: function() {
+      // Bind method scope.
+      _.bindAll(this, 'render');
+    },
+    
+    render: function() {
+      // @todo: Replace with template logic.
+      $(this.el).html(this.model.get('body') + ' - <a href="#" class="remove">Remove</a>');
+      // For chainability.
+      return this;
+    },
+    
+    removePost: function(e) {
+      e.preventDefault();
+      this.model.destroy();
+      $(this.el).fadeOut();
+    }
+  });
+  
+  /**
+   * Application View
+   */
+  var AppView = Backbone.View.extend({
+    el: $('body'),
+    
+    // Setup events.
+    events: {
+      'submit form#post': 'createPost'
+    },
+    
+    // Initialize the application and render the existing posts.
+    initialize: function() {
+      var app = this;
+      
+      // Bind method scope.
+      _.bindAll(this, 'createPost');
+      
+      // Store common jquery objects.
+      app.bodyInput = $('form#post input[name="body"]');
+      
+      // Create a posts list.
+      app.postsList = new PostCollection();
+      
+      // Render posts added to the list.
+      app.postsList.bind('add', function(post) {
+        var postView = new PostView({model: post});
+        $('#posts ul').append(postView.render().el);
+      });
+      
+      // Pull initial posts from the server.
+      $.getJSON('/posts.json', function(response) {
+        $.each(response, function(i, post) {
+          var newPost = new Post({body: post.body});
+          app.postsList.add(newPost);
+        });
+      });
+    },
+    
+    // Create a post from the form data.
+    createPost: function(e) {
+      this.postsList.create({
+        body: this.bodyInput.val()
+      });
+      this.bodyInput.val('');
+      return false;
+    }
+    
+  });
+  
+  // When the DOM is ready, instatiate the application.
+  $(function() {
+    var appView = new AppView();
+  });
 
 })(jQuery);

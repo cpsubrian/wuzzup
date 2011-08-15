@@ -1,10 +1,6 @@
 /**
  * Dummy data to create a user with.
  */
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    ObjectId = Schema.ObjectId;
-
 module.exports = {
   "_id" : "4e34aab966fa87ff6f000001",
   "twit" : {

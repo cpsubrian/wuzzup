@@ -6,7 +6,7 @@ var app, browser;
 
 var macros = module.exports = function(a) {
   app = a;
-  browser = tobi.createBrowser(app);  
+  browser = tobi.createBrowser(app);
   return macros;
 }
 
@@ -55,6 +55,16 @@ macros.authenticate = function() {
   return function() {
     var self = this;
     
+  }
+}
+
+/**
+ * Reset the browser instance.
+ */
+macros.resetBrowser = function() {
+  return function() {
+    browser = tobi.createBrowser(app);
+    this.callback(null, TRUE);
   }
 }
 
