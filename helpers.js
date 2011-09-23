@@ -2,7 +2,7 @@
  * Application helpers.  These are available in all rendered template.
  */
 module.exports = function(app, conf) {
-  return {
+  app.helpers({
     // Application title.
     title: conf.title,  
     
@@ -12,10 +12,15 @@ module.exports = function(app, conf) {
         return '<script type="text/javascript" src="' + src + '"></script>'
       }).join("\n");
     },
-    footerScripts: function() {
+    footerScripts: function(req, res) {
       return conf.scripts['footer'].map(function(src) {
         return '<script type="text/javascript" src="' + src + '"></script>'
       }).join("\n");
     }
-  };
+  });
+  app.dynamicHelpers({
+    authGlobal: function(req, res) {
+      return '<script type="text/javascript">var authenticated = ' + (req.user ? 'true' : 'false') + '</script>'; 
+    }
+  });
 }

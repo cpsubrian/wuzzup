@@ -1,5 +1,6 @@
 // Compatibility for '$' variable.
-(function($) { 
+(function($) {
+  Backbone.emulateHTTP = true;
 
   /**
    * Post Model
@@ -41,12 +42,16 @@
     
     initialize: function() {
       // Bind method scope.
-      _.bindAll(this, 'render');
+      _.bindAll(this, 'render', 'removePost');
     },
     
     render: function() {
       // @todo: Replace with template logic.
-      $(this.el).html(this.model.get('body') + ' - <a href="#" class="remove">Remove</a>');
+      var postHtml = this.model.get('body');
+      if (authenticated) {
+        postHtml += '<a href="#" class="remove">Remove</a>';
+      }
+      $(this.el).html(postHtml);
       // For chainability.
       return this;
     },
@@ -80,33 +85,60 @@
       app.bodyInput = $('form#post input[name="body"]');
       
       // Create a posts list.
-      app.postsList = new PostCollection();
+      app.posts = new PostCollection();
       
       // Render posts added to the list.
-      app.postsList.bind('add', function(post) {
+      app.posts.bind('add', function(post) {
         var postView = new PostView({model: post});
-        $('#posts ul').append(postView.render().el);
+        $('#posts ul').prepend(postView.render().el);
+      });
+      
+      app.posts.bind('destroy', function(post) {
+        app.posts.remove(post);
       });
       
       // Pull initial posts from the server.
       $.getJSON('/posts.json', function(response) {
-        $.each(response, function(i, post) {
-          var newPost = new Post({body: post.body});
-          app.postsList.add(newPost);
+        $.each(response, function(i, data) {
+          var post = new Post({ 
+            id: data._id,
+            body: data.body,
+            isodate: data.updatedAt
+          });
+          app.posts.add(post);
         });
       });
     },
     
     // Create a post from the form data.
     createPost: function(e) {
-      this.postsList.create({
-        body: this.bodyInput.val()
+      e.preventDefault();
+      var app = this;
+      var date = new Date();          
+      var post = new Post({
+        body: app.bodyInput.val(),
+        isodate: date.toISOString()
       });
-      this.bodyInput.val('');
-      return false;
+      app.posts.add(post);
+      app.bodyInput.val('');
+      post.save();
     }
     
   });
+  
+  // Output dates in ISO.
+  Date.prototype.toISOString = function() {
+    var d = this;
+    function pad(n){
+        return (n < 10) ? ('0' + n) : n;
+    }
+    return d.getUTCFullYear() + '-' + 
+    pad(d.getUTCMonth()+1) + '-' +
+    pad(d.getUTCDate()) + 'T' +
+    pad(d.getUTCHours()) + ':' +
+    pad(d.getUTCMinutes()) + ':' +
+    pad(d.getUTCSeconds()) + 'Z'
+  };
   
   // When the DOM is ready, instatiate the application.
   $(function() {

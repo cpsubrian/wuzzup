@@ -16,6 +16,16 @@ var PostController = function(app, conf) {
   
   UserController = app.controllers.user;
   
+  // Param Preconditions.
+  app.param('postId', function(req, res, next, id){
+    Post.findById(id, function(err, post){
+      if (err) return next(err);
+      if (!post) return next(new Error('failed to find post'));
+      req.post = post;
+      next();
+    });
+  });
+    
   // GET Routes.
   app.get('/posts.:format?', this.listPosts);
   app.get('/posts/:postId.:format?', this.readPost);
@@ -28,25 +38,23 @@ var PostController = function(app, conf) {
   
   // DELETE Routes.
   app.del('/posts/:postId.:format?', UserController.requireUser, this.deletePost);
-}
+};
 
 /**
  * List Posts.
  */
 PostController.prototype.listPosts = function(req, res) {
-  Post.find({}, function(err, posts) {
+  Post.find({}).sort('updatedAt', 1).run(function(err, posts) {
     switch (req.params.format) {
       case 'json':
+      default:
         res.send(posts.map(function(post) {
           return post.toJSON();
         }), {'Content-Type' : 'application/json'});
         break;
-
-      default:
-        // TODO Implement html version.
     }
   });
-}
+};
 
 /**
  * Read a Post.
@@ -54,64 +62,56 @@ PostController.prototype.listPosts = function(req, res) {
 PostController.prototype.readPost = function(req, res) {
   switch (req.params.format) {
     case 'json':
-      res.send(req.loaded.doc.toJSON(), {'Content-Type' : 'application/json'});
-      break;
-  
     default:
-      // TODO implement html version.
+      res.send(req.post.toJSON(), {'Content-Type' : 'application/json'});
+      break;
   }
-}
+};
 
 /**
  * Create a Post.
  */
 PostController.prototype.createPost = function(req, res) {
-  var post = new Post({body: req.body['body'], user: req.user._id});
+  var post = new Post({body: req.body.body, user: req.user._id});
   post.save(function() {
     switch (req.params.format) {
       case 'json':
+      default:
         res.send(post.toJSON(), {'Content-Type' : 'application/json'});
         break;
-
-      default:
-        // TODO implement html version.
     }
   });
-}
+};
 
 /**
  * Update a Post.
  */
 PostController.prototype.updatePost = function(req, res) {
-  var post = req.loaded.post;
+  var post = req.post;
   post.body = req.body['body'];
   post.save(function() {
     switch (req.params.format) {
       case 'json':
+      default:
         res.send(post.toJSON(), {'Content-Type' : 'application/json'});
-       break;
-
-       default:
-        // TODO implement html version.
+       break;;
     }
   });
-}
+};
 
 /**
  * Delete a Post.
  */
 PostController.prototype.deletePost = function(req, res) {
-  req.loaded.post.remove(function() {
+  req.post.remove(function() {
     switch (req.params.format) {
       case 'json':
+      default:
         res.send('true', {'Content-Type' : 'application/json'});
-       break;
-
-       default:
-        // TODO implement html version.
+       break;;
     }
   });
-}
+};
 
 // Export a new instance of a PostController.
 module.exports = function(app, conf) {
