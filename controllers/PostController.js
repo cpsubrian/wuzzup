@@ -16,7 +16,7 @@ var PostController = function(app, conf) {
   
   UserController = app.controllers.user;
   
-  // Param Preconditions.
+  // Params.
   app.param('postId', function(req, res, next, id){
     Post.findById(id, function(err, post){
       if (err) return next(err);
