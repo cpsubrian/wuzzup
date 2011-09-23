@@ -14,18 +14,22 @@ backbone.js.
 1. Edit conf.js with your configuration options.
 
 To run the app in one process use:
+
     node app.js
 
 To run the app via cluster (multi-processor, auto reloading, etc.)
+
     node server.js
 
 ## Tests
 
 Tests will be written and executed using vows.  Vows should be install with the
-global flag (-g): `npm install vows -g'
+global flag (-g): `npm install vows -g`
 
 To run the tests:
+
     npm test
 
 Or:
+
     vows
